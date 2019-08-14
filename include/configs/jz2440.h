@@ -21,6 +21,7 @@
 #define CONFIG_S3C24X0		/* in a SAMSUNG S3C24x0-type SoC */
 #define CONFIG_S3C2440		/* specifically a SAMSUNG S3C2410 SoC */
 #define CONFIG_JZ2440		/* on a SAMSUNG SMDK2410 Board */
+#define CONFIG_AUTO_COMPLETE
 
 #define CONFIG_SYS_TEXT_BASE	0x0
 
@@ -36,10 +37,10 @@
 /*
  * Hardware drivers
  */
-//#define CONFIG_CS8900		/* we have a CS8900 on-board */
-//#define CONFIG_CS8900_BASE	0x19000300
-//#define CONFIG_CS8900_BUS16	/* the Linux driver does accesses as shorts */
-
+#define CONFIG_DRIVER_DM9000    
+#define CONFIG_DM9000_BASE  	0x20000000
+#define DM9000_IO               CONFIG_DM9000_BASE
+#define DM9000_DATA         	(CONFIG_DM9000_BASE + 4)
 /*
  * select serial console configuration
  */
