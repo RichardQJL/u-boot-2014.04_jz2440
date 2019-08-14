@@ -123,17 +123,39 @@ copyex:
 	mov	r1, #0xffffffff
 	ldr	r0, =INTMSK
 	str	r1, [r0]
+
 # if defined(CONFIG_S3C2410)
 	ldr	r1, =0x3ff
 	ldr	r0, =INTSUBMSK
 	str	r1, [r0]
-# endif
 
 	/* FCLK:HCLK:PCLK = 1:2:4 */
 	/* default FCLK is 120 MHz ! */
 	ldr	r0, =CLKDIVN
 	mov	r1, #3
 	str	r1, [r0]
+#endif
+
+# if defined(CONFIG_S3C2440)
+        ldr     r1, =0x7fff
+        ldr     r0, =INTSUBMSK
+        str     r1, [r0]
+
+	/* FCLK:HCLK:PCLK = 1:4:8 */
+        /* default FCLK is 400 MHz ! */
+        ldr     r0, =CLKDIVN
+        mov     r1, #5
+        str     r1, [r0]
+
+	mrc p15, 0, r0, c1, c0, 0
+	orr r0, r0, #0xc0000000
+	mcr p15, 0, r0, c1, c0, 0
+
+	ldr     r0,=0x4c000004
+	ldr     r1,=((0x5c<<12)|(0x1<<4)|(0x1<<0))
+	str	r1, [r0]
+# endif
+
 #endif	/* CONFIG_S3C24X0 */
 
 	/*
