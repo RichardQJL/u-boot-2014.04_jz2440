@@ -5,7 +5,7 @@
  * Gary Jennejohn <garyj@denx.de>
  * David Mueller <d.mueller@elsoft.ch>
  *
- * Configuation settings for the SAMSUNG SMDK2410 board.
+ * Configuation settings for the SAMSUNG JZ2440 board.
  *
  * SPDX-License-Identifier:	GPL-2.0+
  */
@@ -19,15 +19,15 @@
  */
 #define CONFIG_ARM920T		/* This is an ARM920T Core */
 #define CONFIG_S3C24X0		/* in a SAMSUNG S3C24x0-type SoC */
-#define CONFIG_S3C2440		/* specifically a SAMSUNG S3C2410 SoC */
-#define CONFIG_JZ2440		/* on a SAMSUNG SMDK2410 Board */
+#define CONFIG_S3C2440		/* specifically a SAMSUNG S3C2440 SoC */
+#define CONFIG_JZ2440		/* on a SAMSUNG JZ2440 Board */
 #define CONFIG_AUTO_COMPLETE
 
 #define CONFIG_SYS_TEXT_BASE	0x0
 
 #define CONFIG_SYS_ARM_CACHE_WRITETHROUGH
 
-/* input clock of PLL (the SMDK2410 has 12MHz input clock) */
+/* input clock of PLL (the JZ2440 has 12MHz input clock) */
 #define CONFIG_SYS_CLK_FREQ	12000000
 
 #define CONFIG_CMDLINE_TAG	/* enable passing of ATAGs */
@@ -45,7 +45,7 @@
  * select serial console configuration
  */
 #define CONFIG_S3C24X0_SERIAL
-#define CONFIG_SERIAL1		1	/* we use SERIAL 1 on SMDK2410 */
+#define CONFIG_SERIAL1		1	/* we use SERIAL 1 on JZ2440 */
 
 /************************************************************
  * USB support (currently only works with D-cache off)
@@ -82,8 +82,8 @@
 //#define CONFIG_CMD_DATE
 //#define CONFIG_CMD_DHCP
 //#define CONFIG_CMD_ELF
-//#define CONFIG_CMD_NAND
-//#define CONFIG_CMD_PING
+#define CONFIG_CMD_NAND
+#define CONFIG_CMD_PING
 //#define CONFIG_CMD_REGINFO
 //#define CONFIG_CMD_USB
 
@@ -154,9 +154,10 @@
 #define CONFIG_SYS_FLASH_BANKS_LIST     { CONFIG_SYS_FLASH_BASE }
 #define CONFIG_SYS_MAX_FLASH_SECT	(128)
 
-#define CONFIG_ENV_ADDR			(CONFIG_SYS_FLASH_BASE + 0x070000)
-#define CONFIG_ENV_IS_IN_FLASH
-#define CONFIG_ENV_SIZE			0x10000
+#define CONFIG_ENV_IS_IN_NAND
+#define CONFIG_ENV_OFFSET   0x00040000	/* 256K */
+#define CONFIG_ENV_SIZE     0x20000	/* 128K */
+#define CONFIG_ENV_RANGE    CONFIG_ENV_SIZE
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
 
@@ -173,8 +174,8 @@
  * NAND configuration
  */
 #ifdef CONFIG_CMD_NAND
-#define CONFIG_NAND_S3C2410
-#define CONFIG_SYS_S3C2410_NAND_HWECC
+#define CONFIG_NAND_S3C2440
+#define CONFIG_SYS_S3C2440_NAND_HWECC
 #define CONFIG_SYS_MAX_NAND_DEVICE	1
 #define CONFIG_SYS_NAND_BASE		0x4E000000
 #endif
@@ -186,9 +187,18 @@
 //#define CONFIG_CMD_EXT2
 //#define CONFIG_CMD_UBI
 //#define CONFIG_CMD_UBIFS
-//#define CONFIG_CMD_MTDPARTS
-//#define CONFIG_MTD_DEVICE
-//#define CONFIG_MTD_PARTITIONS
+#define CONFIG_CMD_MTDPARTS
+#define CONFIG_MTD_DEVICE
+#define CONFIG_MTD_PARTITIONS
+#define MTDIDS_DEFAULT              "nand0=jz2440-0"
+#define MTDPARTS_DEFAULT            "mtdparts=jz2440-0:256k(u-boot),"   \
+									"128k(params)," 	\
+									"4m(kernel),"		\
+									"-(rootfs)"
+
+#define CONFIG_BOOTARGS "console=ttySAC0,115200 root=/dev/mtdblock3 init=/linuxrc rootfstype=jffs2"
+#define CONFIG_BOOTCOMMAND  "nand read 0x30000000 kernel;bootm 0x30000000"
+
 //#define CONFIG_YAFFS2
 //#define CONFIG_RBTREE
 
